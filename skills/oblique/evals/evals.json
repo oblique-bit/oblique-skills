@@ -1,0 +1,45 @@
+{
+  "skill_name": "oblique",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to build a settings page in Angular with a form, a two-column layout, and a warning before users leave with unsaved changes.",
+      "expected_output": "Selects ob-components, ob-helpers, and ob-ax, then directs the agent to the relevant layout, form, unsaved-changes, and accessibility references."
+    },
+    {
+      "id": 2,
+      "prompt": "Which Oblique guidance should I use for a searchable table with filters and keyboard support?",
+      "expected_output": "Selects ob-components for table and form controls and ob-ax for keyboard accessibility."
+    },
+    {
+      "id": 3,
+      "prompt": "Write a pure TypeScript date utility that does not use Angular or Oblique.",
+      "expected_output": "Does not route the task to Oblique skills."
+    },
+    {
+      "id": 4,
+      "prompt": "Start a new internal Angular app called permits-portal with Oblique, including the right npm registry setup and generated master layout.",
+      "expected_output": "Selects ob-toolchain and directs the agent to the new-project, npmrc, add-oblique, and verification guidance."
+    },
+    {
+      "id": 5,
+      "prompt": "Our Angular app is on Oblique 15. Help me upgrade it to 16, then check the generated changes and make sure the app still passes lint and tests.",
+      "expected_output": "Selects ob-toolchain for the incremental update and verification workflow, with ob-components or ob-helpers only if the migration changes their APIs."
+    },
+    {
+      "id": 6,
+      "prompt": "I need a language switcher that updates the URL, registers Swiss locales, and keeps date formatting consistent.",
+      "expected_output": "Selects ob-helpers for translations, localization, and date behavior; adds ob-ax when accessibility of the language control is in scope."
+    },
+    {
+      "id": 7,
+      "prompt": "Create a new Oblique project with a form that validates accessibly and warns about unsaved changes before navigation.",
+      "expected_output": "Selects ob-toolchain for project creation, ob-components for the form, ob-helpers for unsaved changes, and ob-ax for accessibility."
+    },
+    {
+      "id": 8,
+      "prompt": "Update a plain Angular application that intentionally does not use Oblique or any Oblique packages.",
+      "expected_output": "Does not route the task to Oblique skills unless the user decides to adopt Oblique as part of the update."
+    }
+  ]
+}

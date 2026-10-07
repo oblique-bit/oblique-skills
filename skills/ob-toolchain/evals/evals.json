@@ -1,0 +1,20 @@
+{
+  "skill_name": "ob-toolchain",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a new internal Angular project called permits-portal with Oblique and leave it ready for development.",
+      "expected_output": "Checks the Node prerequisite, uses the Oblique CLI with internal npm registry configuration, keeps prompts visible, and verifies install, start, lint, and tests."
+    },
+    {
+      "id": 2,
+      "prompt": "Our existing Angular app is on Oblique 15 and needs to move to Oblique 16. The working tree has unrelated edits.",
+      "expected_output": "Preserves unrelated changes, updates one major at a time, uses the versioned Oblique CLI update, reviews schematic and changelog changes, and runs lint/tests."
+    },
+    {
+      "id": 3,
+      "prompt": "Add an Oblique dialog to an already configured Angular application and make its close button accessible.",
+      "expected_output": "Routes component and accessibility implementation to ob-components and ob-ax instead of treating it as a project lifecycle task."
+    }
+  ]
+}

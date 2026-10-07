@@ -1,0 +1,47 @@
+# promptfoo evals for the Oblique skills.
+#
+# The provider is evals/bit-provider.js, a custom provider for the BIT AI
+# model gateway. The API key comes from BIT_LLM_API_KEY (sourced from
+# ~/.agent-credentials/env). Test cases are generated from the per-skill
+# evals.json files by evals/build-tests.js.
+#
+# The evals target the skills, not the models: one model (GLM) runs every
+# case twice, once with the skill body injected into the prompt and once
+# without it (baseline). The pass-rate difference shows what the skill adds.
+# Near-miss cases carry no skill content; they test that the model does not
+# route the task to Oblique skills.
+#
+# The gateway is reachable directly from this network without a proxy; do
+# not set NODE_USE_ENV_PROXY for these runs.
+#
+# Run: node_modules/.bin/promptfoo eval -c promptfooconfig.yaml --no-cache
+# View: node_modules/.bin/promptfoo view
+
+description: Oblique skill evals on GLM, with skill vs baseline
+
+prompts:
+  - '{{prompt}}'
+
+providers:
+  - id: file://bit-provider.js
+    label: glm-with-skill
+    config:
+      model: glm-5-3-flash-r
+      inject_skill: true
+  - id: file://bit-provider.js
+    label: glm-baseline
+    config:
+      model: glm-5-3-flash-r
+      inject_skill: false
+
+# The llm-rubric grader defaults to the OpenAI Codex SDK, which cannot reach
+# its cloud config bundle from this network. Point the grader at a BIT model
+# instead.
+defaultTest:
+  options:
+    provider:
+      id: file://bit-provider.js
+      config:
+        model: glm-5-3-flash-r
+
+tests: file://generated-tests.json

@@ -1,0 +1,20 @@
+{
+  "skill_name": "ob-ax",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this Angular dialog for accessibility. It opens on click, has an icon-only close button, and shows validation errors below the form fields.",
+      "expected_output": "Checks keyboard operation, accessible naming, focus management, Escape handling, and aria-invalid/aria-describedby associations."
+    },
+    {
+      "id": 2,
+      "prompt": "Make the Oblique master layout accessible for keyboard and screen-reader users.",
+      "expected_output": "Applies WCAG 2.2 AA-oriented cross-cutting rules and reads the relevant component reference."
+    },
+    {
+      "id": 3,
+      "prompt": "Reduce the bundle size of an Angular service that has no UI, focus, forms, or accessibility behavior.",
+      "expected_output": "Does not activate accessibility guidance unless the implementation introduces a user-facing interaction."
+    }
+  ]
+}

@@ -116,6 +116,69 @@ prompts. Include outcome-style wording, casual wording, and prompts that
 mention a competing skill. Prefer substantive tasks that genuinely benefit
 from the skill; trivial one-step prompts are weak trigger tests.
 
+### Running the evals with promptfoo
+
+The evals run on the BIT AI model gateway through promptfoo. They target the
+skills, not the models: one model (GLM) runs every case twice, once with the
+skill body injected into the prompt and once without it (baseline). The
+pass-rate difference shows what the skill adds. Near-miss cases carry no
+skill content; they test that the model does not route the task to Oblique
+skills.
+
+The setup lives in `evals/`:
+
+- `evals/bit-provider.js`: custom provider for the gateway. One class, one
+  instance per config; `config.model` selects the deployment and
+  `config.inject_skill` decides whether the skill body is prepended to the
+  prompt. The API key comes from `BIT_LLM_API_KEY` (sourced from
+  `~/.agent-credentials/env`).
+- `evals/build-tests.js`: generates `evals/generated-tests.json` from the
+  per-skill `evals.json` files. Each case becomes one test with an
+  `llm-rubric` assertion built from `expected_output`. Behavior cases get
+  `vars.skill_content`; near-miss cases stay bare. Rerun it after adding
+  eval cases.
+- `evals/promptfooconfig.yaml`: the two providers (`glm-with-skill`,
+  `glm-baseline`), the grader override, and the test file reference.
+- `evals/aggregate-results.js`: reads the promptfoo sqlite database and
+  prints pass/fail counts per provider, skill, and case type, plus failure
+  samples. Use it to see why a case failed.
+
+Run from `evals/` through the npm scripts:
+
+```
+npm run eval
+npm run results
+```
+
+The scripts pass `--env-file ~/.agent-credentials/env`, so no manual env
+sourcing is needed. `npm run build` regenerates the test file after eval
+cases change; `npm run eval:oblique` and `npm run eval:toolchain` rerun one
+skill's cases; `npm run view` opens the web UI.
+
+Gotchas learned on this machine:
+
+- The `llm-rubric` grader defaults to the OpenAI Codex SDK, which cannot
+  reach its cloud config bundle from this network. The config overrides the
+  grader with a BIT model via `defaultTest.options.provider`.
+- Deployment ids differ from URL slugs on the gateway (id `glm-5-3-flash-r`
+  lives at `.../glm-5.3-flash/v1`); the mapping is explicit in the provider.
+- The gateway is reachable directly from this network without a proxy; do
+  not set `NODE_USE_ENV_PROXY` for these runs. Transient 503 "no healthy
+  upstream" and 504 "stream timeout" responses happen; rerun the affected
+  cases with `--filter-pattern` instead of the whole matrix.
+- Reasoning models return `reasoning` beside `content` and can exhaust a
+  small `max_tokens` on thinking alone; the provider caps at 32768 and keeps
+  reasoning out of the graded output.
+- Install promptfoo locally in `evals/` (`npm install promptfoo`); `npx`
+  downloads it on every run and the first download can exceed a 5 minute
+  timeout. A cancelled npm install keeps running in the background; check
+  `ps aux | grep npm` before retrying.
+- Pipe long-running command output to a file and read the file; tailing
+  hides progress and interactive prompts.
+- promptfoo exits 100 when any case fails or errors; 0 only when all pass.
+  Read `~/.promptfoo/promptfoo.db` (via `@libsql/client`) for per-case
+  reasons; `promptfoo show eval` has no JSON output.
+
 ### Completion criteria
 
 A skill is ready when its frontmatter validates, its referenced files exist,

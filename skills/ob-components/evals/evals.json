@@ -1,0 +1,20 @@
+{
+  "skill_name": "ob-components",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add an Oblique dialog with a primary confirmation button and a secondary cancel action. Include the accessible behavior.",
+      "expected_output": "Reads the dialog reference and applies the component guidance plus relevant accessibility rules."
+    },
+    {
+      "id": 2,
+      "prompt": "I do not know the Oblique component name, but I need a responsive page shell with a main column and a side drawer.",
+      "expected_output": "Recognizes this as a component task and reads the column-layout or master-layout reference."
+    },
+    {
+      "id": 3,
+      "prompt": "Configure an Oblique authentication interceptor and preserve the current login session.",
+      "expected_output": "Does not treat the task as primarily a component task; routes helper or authentication guidance instead."
+    }
+  ]
+}

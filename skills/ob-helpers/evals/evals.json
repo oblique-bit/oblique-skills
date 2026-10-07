@@ -1,0 +1,20 @@
+{
+  "skill_name": "ob-helpers",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "When a user changes language, update the URL and keep Angular dates formatted for the selected locale.",
+      "expected_output": "Reads the translations, localize, and date helper references before implementing the behavior."
+    },
+    {
+      "id": 2,
+      "prompt": "Prevent navigation away from a dirty form and explain how the confirmation should work.",
+      "expected_output": "Reads the unsaved-changes reference and includes the accessibility implications."
+    },
+    {
+      "id": 3,
+      "prompt": "Create a reusable Angular button component with a tooltip and loading state.",
+      "expected_output": "Does not treat the task as primarily a helper or service task; routes component guidance instead."
+    }
+  ]
+}

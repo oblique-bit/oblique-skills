@@ -1,0 +1,317 @@
+[
+	{
+		"description": "ob-ax #1",
+		"vars": {
+			"prompt": "Review this Angular dialog for accessibility. It opens on click, has an icon-only close button, and shows validation errors below the form fields.",
+			"skill_name": "ob-ax",
+			"eval_id": "1",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Accessibility Spec\n\nAccessibility rules for Angular applications built with Oblique. The\nconformance target is WCAG 2.2 AA; it is not restated here because models\nalready know it. Rules are written in MUST/SHOULD form. When an Oblique MCP\nserver is available, its information overrules this spec on API specifics\nonly, never on semantics.\n\n## Layered rules\n\nAccessibility guidance is layered. This spec is the top layer:\n\n1. Component references in `ob-components` and `ob-helpers` carry the\n   component-specific a11y rules (their Accessibility section). Read those\n   first when a specific component is in hand.\n2. The cross-cutting MUSTs below apply to every change.\n3. This spec adds the full picture: Angular anti-patterns and Oblique\n   helpers.\n\n## Cross-cutting MUSTs\n\n- Every interactive element MUST have an accessible name, via visible text,\n  `aria-label`, or `aria-labelledby`.\n- Icon-only buttons MUST have an accessible label; a tooltip is the\n  preferred way to provide it.\n- All functionality MUST be operable by keyboard.\n- Overlays (dialogs, popovers, off-canvas) MUST close on Escape and MUST\n  NOT trap keyboard focus without a way out.\n- Information MUST NOT be conveyed by color alone.\n- Form errors MUST be programmatically associated with their inputs\n  (`aria-describedby`, `aria-invalid`).\n- Status changes MUST be announced to screen readers without receiving\n  focus (live region, `role=\"status\"`, `role=\"alert\"`).\n- Focus indicators MUST stay visible; `outline: none` MUST be replaced by\n  a `:focus-visible` style.\n- Text contrast MUST meet 4.5:1 (normal text) and 3:1 (large text); UI\n  components and focus indicators MUST meet 3:1 against adjacent colors.\n- Touch targets MUST be at least 24x24 CSS px or have equivalent spacing.\n\n## Angular anti-patterns\n\nAdapted from [github/awesome-copilot](https://github.com/github/awesome-copilot/blob/main/instructions/a11y.instructions.md)\n(MIT), extended with Oblique specifics.\n\n### NG1: `(click)` on a non-interactive element\n\n`(click)` on a `<div>` or `<span>` without `role`, `tabindex`, and a\nkeyboard handler is not focusable and has no role. Use `<button>`. When a\ndiv is required, add `role=\"button\"`, `tabindex=\"0\"`, and\n`(keydown.enter)` plus `(keydown.space)`.\n\n### NG2: Modal without focus management\n\nA modal component without focus trapping keeps keyboard focus able to\nwander behind the overlay. Angular CDK's `Dialog` service handles trapping\nand restoration automatically; prefer it. For custom overlays, use\n`cdkTrapFocus` with `[cdkTrapFocusAutoCapture]=\"true\"`, and return focus to\nthe trigger element on close.\n\n### NG3: Route change without announcement\n\nA router navigation without announcement leaves screen reader users on the\nold page context. Announce the new page title after navigation:\n\n```typescript\nrouter.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {\n\tliveAnnouncer.announce(titleService.getTitle(), 'polite');\n});\n```\n\nOblique's master layout manages the page structure; when it is present,\nverify the announcement still fires for in-app navigations.\n\n### NG4: Form errors not linked to inputs\n\nForms showing errors without `[attr.aria-invalid]` and\n`[attr.aria-describedby]` leave the error text unassociated. Bind both to\nthe form control state:\n\n```html\n<input [attr.aria-invalid]=\"control.invalid\" [attr.aria-describedby]=\"control.invalid ? 'email-error' : null\" />\n<span id=\"email-error\" class=\"error\">Invalid email format</span>\n```\n\nOblique's error-messages helper centralizes error text; link its output\nwith `aria-describedby`.\n\n## Oblique a11y helpers\n\n- **Focus with outline** (`focus-with-outline`): restores a visible focus\n  outline where Oblique styling removed it. Use it instead of leaving\n  `outline: none` in place.\n- **Focus invalid** (`focus-invalid`): focuses the first invalid control on\n  submit, so keyboard and screen reader users land on the error. Use it in\n  every form with validation.\n- **Unsaved changes** (`unsaved-changes`): guards navigation away from\n  dirty forms. Announce the guard dialog's decision path to screen readers.\n- **Error messages** (`error-messages`): centralized validation text. Pair\n  with `aria-describedby` per NG4.\n\nRead the matching reference in `ob-helpers` for the API of each helper.\n\n## Review checklist\n\n- [ ] Every interactive element has an accessible name\n- [ ] Icon-only buttons have a label (tooltip preferred)\n- [ ] All functionality works by keyboard; overlays close on Escape\n- [ ] Errors are linked to inputs; first invalid control gets focus\n- [ ] Status changes are announced via live regions\n- [ ] Focus indicators are visible; contrast meets 4.5:1 / 3:1\n- [ ] Information is not conveyed by color alone\n- [ ] Touch targets are at least 24x24 CSS px"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Checks keyboard operation, accessible naming, focus management, Escape handling, and aria-invalid/aria-describedby associations."
+			}
+		]
+	},
+	{
+		"description": "ob-ax #2",
+		"vars": {
+			"prompt": "Make the Oblique master layout accessible for keyboard and screen-reader users.",
+			"skill_name": "ob-ax",
+			"eval_id": "2",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Accessibility Spec\n\nAccessibility rules for Angular applications built with Oblique. The\nconformance target is WCAG 2.2 AA; it is not restated here because models\nalready know it. Rules are written in MUST/SHOULD form. When an Oblique MCP\nserver is available, its information overrules this spec on API specifics\nonly, never on semantics.\n\n## Layered rules\n\nAccessibility guidance is layered. This spec is the top layer:\n\n1. Component references in `ob-components` and `ob-helpers` carry the\n   component-specific a11y rules (their Accessibility section). Read those\n   first when a specific component is in hand.\n2. The cross-cutting MUSTs below apply to every change.\n3. This spec adds the full picture: Angular anti-patterns and Oblique\n   helpers.\n\n## Cross-cutting MUSTs\n\n- Every interactive element MUST have an accessible name, via visible text,\n  `aria-label`, or `aria-labelledby`.\n- Icon-only buttons MUST have an accessible label; a tooltip is the\n  preferred way to provide it.\n- All functionality MUST be operable by keyboard.\n- Overlays (dialogs, popovers, off-canvas) MUST close on Escape and MUST\n  NOT trap keyboard focus without a way out.\n- Information MUST NOT be conveyed by color alone.\n- Form errors MUST be programmatically associated with their inputs\n  (`aria-describedby`, `aria-invalid`).\n- Status changes MUST be announced to screen readers without receiving\n  focus (live region, `role=\"status\"`, `role=\"alert\"`).\n- Focus indicators MUST stay visible; `outline: none` MUST be replaced by\n  a `:focus-visible` style.\n- Text contrast MUST meet 4.5:1 (normal text) and 3:1 (large text); UI\n  components and focus indicators MUST meet 3:1 against adjacent colors.\n- Touch targets MUST be at least 24x24 CSS px or have equivalent spacing.\n\n## Angular anti-patterns\n\nAdapted from [github/awesome-copilot](https://github.com/github/awesome-copilot/blob/main/instructions/a11y.instructions.md)\n(MIT), extended with Oblique specifics.\n\n### NG1: `(click)` on a non-interactive element\n\n`(click)` on a `<div>` or `<span>` without `role`, `tabindex`, and a\nkeyboard handler is not focusable and has no role. Use `<button>`. When a\ndiv is required, add `role=\"button\"`, `tabindex=\"0\"`, and\n`(keydown.enter)` plus `(keydown.space)`.\n\n### NG2: Modal without focus management\n\nA modal component without focus trapping keeps keyboard focus able to\nwander behind the overlay. Angular CDK's `Dialog` service handles trapping\nand restoration automatically; prefer it. For custom overlays, use\n`cdkTrapFocus` with `[cdkTrapFocusAutoCapture]=\"true\"`, and return focus to\nthe trigger element on close.\n\n### NG3: Route change without announcement\n\nA router navigation without announcement leaves screen reader users on the\nold page context. Announce the new page title after navigation:\n\n```typescript\nrouter.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {\n\tliveAnnouncer.announce(titleService.getTitle(), 'polite');\n});\n```\n\nOblique's master layout manages the page structure; when it is present,\nverify the announcement still fires for in-app navigations.\n\n### NG4: Form errors not linked to inputs\n\nForms showing errors without `[attr.aria-invalid]` and\n`[attr.aria-describedby]` leave the error text unassociated. Bind both to\nthe form control state:\n\n```html\n<input [attr.aria-invalid]=\"control.invalid\" [attr.aria-describedby]=\"control.invalid ? 'email-error' : null\" />\n<span id=\"email-error\" class=\"error\">Invalid email format</span>\n```\n\nOblique's error-messages helper centralizes error text; link its output\nwith `aria-describedby`.\n\n## Oblique a11y helpers\n\n- **Focus with outline** (`focus-with-outline`): restores a visible focus\n  outline where Oblique styling removed it. Use it instead of leaving\n  `outline: none` in place.\n- **Focus invalid** (`focus-invalid`): focuses the first invalid control on\n  submit, so keyboard and screen reader users land on the error. Use it in\n  every form with validation.\n- **Unsaved changes** (`unsaved-changes`): guards navigation away from\n  dirty forms. Announce the guard dialog's decision path to screen readers.\n- **Error messages** (`error-messages`): centralized validation text. Pair\n  with `aria-describedby` per NG4.\n\nRead the matching reference in `ob-helpers` for the API of each helper.\n\n## Review checklist\n\n- [ ] Every interactive element has an accessible name\n- [ ] Icon-only buttons have a label (tooltip preferred)\n- [ ] All functionality works by keyboard; overlays close on Escape\n- [ ] Errors are linked to inputs; first invalid control gets focus\n- [ ] Status changes are announced via live regions\n- [ ] Focus indicators are visible; contrast meets 4.5:1 / 3:1\n- [ ] Information is not conveyed by color alone\n- [ ] Touch targets are at least 24x24 CSS px"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Applies WCAG 2.2 AA-oriented cross-cutting rules and reads the relevant component reference."
+			}
+		]
+	},
+	{
+		"description": "ob-ax #3",
+		"vars": {
+			"prompt": "Reduce the bundle size of an Angular service that has no UI, focus, forms, or accessibility behavior.",
+			"skill_name": "ob-ax",
+			"eval_id": "3",
+			"case_type": "trigger"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Does not activate accessibility guidance unless the implementation introduces a user-facing interaction."
+			}
+		]
+	},
+	{
+		"description": "ob-components #1",
+		"vars": {
+			"prompt": "Add an Oblique dialog with a primary confirmation button and a secondary cancel action. Include the accessible behavior.",
+			"skill_name": "ob-components",
+			"eval_id": "1",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Components\n\nDocs for the Oblique UI components, distilled from the Oblique\ndocumentation. Each reference carries the component's purpose, usage rules,\nhow to use it, and its accessibility rules. When an Oblique MCP server is\navailable, its information overrules these references on API specifics\nonly, never on semantics.\n\n## Cross-cutting accessibility MUSTs\n\n- Every interactive element MUST have an accessible name.\n- Icon-only buttons MUST have an accessible label; a tooltip is preferred.\n- Overlays MUST close on Escape and MUST NOT trap focus.\n- Information MUST NOT be conveyed by color alone.\n- Only one primary button per page or dialog.\n\nThe full spec lives in `ob-ax`; the references below carry the\ncomponent-specific rules.\n\nThese are the current supported Oblique component references. Use\n`references/migration.md` for historical version changes instead of selecting\nan older component reference.\n\n## References\n\nRead the reference for a component before using it. Each file covers one\ncomponent: purpose, usage rules, how to use, accessibility, and migration\nwhere applicable.\n\n- [alert](references/alert.md)\n- [autocomplete](references/autocomplete.md)\n- [badge](references/badge.md)\n- [breadcrumb](references/breadcrumb.md)\n- [button](references/button.md)\n- [card](references/card.md)\n- [chips](references/chips.md)\n- [column layout](references/column-layout.md)\n- [dialog](references/dialog.md)\n- [expansion panel](references/expansion-panel.md)\n- [external link](references/external-link.md)\n- [file upload and dropzone](references/file-upload.md)\n- [form](references/form.md)\n- [html table](references/html-table.md)\n- [list group](references/list-group.md)\n- [master layout](references/master-layout.md)\n- [material table](references/material-table.md)\n- [nav tree](references/nav-tree.md)\n- [paginator](references/paginator.md)\n- [popover](references/popover.md)\n- [progress bar](references/progress-bar.md)\n- [slide toggle](references/slide-toggle.md)\n- [slider](references/slider.md)\n- [spinner](references/spinner.md)\n- [stepper](references/stepper.md)\n- [tabs](references/tabs.md)\n- [tooltip](references/tooltip.md)\n\n## Migration\n\nWhen migrating between Oblique versions, read\n[15-to-16 migration](references/migrations/15-to-16.md) for the component\nchanges between those releases."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Reads the dialog reference and applies the component guidance plus relevant accessibility rules."
+			}
+		]
+	},
+	{
+		"description": "ob-components #2",
+		"vars": {
+			"prompt": "I do not know the Oblique component name, but I need a responsive page shell with a main column and a side drawer.",
+			"skill_name": "ob-components",
+			"eval_id": "2",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Components\n\nDocs for the Oblique UI components, distilled from the Oblique\ndocumentation. Each reference carries the component's purpose, usage rules,\nhow to use it, and its accessibility rules. When an Oblique MCP server is\navailable, its information overrules these references on API specifics\nonly, never on semantics.\n\n## Cross-cutting accessibility MUSTs\n\n- Every interactive element MUST have an accessible name.\n- Icon-only buttons MUST have an accessible label; a tooltip is preferred.\n- Overlays MUST close on Escape and MUST NOT trap focus.\n- Information MUST NOT be conveyed by color alone.\n- Only one primary button per page or dialog.\n\nThe full spec lives in `ob-ax`; the references below carry the\ncomponent-specific rules.\n\nThese are the current supported Oblique component references. Use\n`references/migration.md` for historical version changes instead of selecting\nan older component reference.\n\n## References\n\nRead the reference for a component before using it. Each file covers one\ncomponent: purpose, usage rules, how to use, accessibility, and migration\nwhere applicable.\n\n- [alert](references/alert.md)\n- [autocomplete](references/autocomplete.md)\n- [badge](references/badge.md)\n- [breadcrumb](references/breadcrumb.md)\n- [button](references/button.md)\n- [card](references/card.md)\n- [chips](references/chips.md)\n- [column layout](references/column-layout.md)\n- [dialog](references/dialog.md)\n- [expansion panel](references/expansion-panel.md)\n- [external link](references/external-link.md)\n- [file upload and dropzone](references/file-upload.md)\n- [form](references/form.md)\n- [html table](references/html-table.md)\n- [list group](references/list-group.md)\n- [master layout](references/master-layout.md)\n- [material table](references/material-table.md)\n- [nav tree](references/nav-tree.md)\n- [paginator](references/paginator.md)\n- [popover](references/popover.md)\n- [progress bar](references/progress-bar.md)\n- [slide toggle](references/slide-toggle.md)\n- [slider](references/slider.md)\n- [spinner](references/spinner.md)\n- [stepper](references/stepper.md)\n- [tabs](references/tabs.md)\n- [tooltip](references/tooltip.md)\n\n## Migration\n\nWhen migrating between Oblique versions, read\n[15-to-16 migration](references/migrations/15-to-16.md) for the component\nchanges between those releases."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Recognizes this as a component task and reads the column-layout or master-layout reference."
+			}
+		]
+	},
+	{
+		"description": "ob-components #3",
+		"vars": {
+			"prompt": "Configure an Oblique authentication interceptor and preserve the current login session.",
+			"skill_name": "ob-components",
+			"eval_id": "3",
+			"case_type": "trigger"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Does not treat the task as primarily a component task; routes helper or authentication guidance instead."
+			}
+		]
+	},
+	{
+		"description": "ob-helpers #1",
+		"vars": {
+			"prompt": "When a user changes language, update the URL and keep Angular dates formatted for the selected locale.",
+			"skill_name": "ob-helpers",
+			"eval_id": "1",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Helpers\n\nDocs for Oblique helpers and services, distilled from the Oblique\ndocumentation. Each reference carries the helper's purpose, usage rules,\nhow to use it, and accessibility rules where the docs provide them. When an\nOblique MCP server is available, its information overrules these references on\nAPI specifics only, never on semantics.\n\n## Cross-cutting accessibility MUSTs\n\n- Every interactive element MUST have an accessible name.\n- Form errors MUST be associated with their inputs through\n  `aria-describedby` and `aria-invalid`.\n- Focus indicators MUST remain visible.\n- Status changes MUST be announced without moving focus.\n- Navigation away from dirty forms MUST give users a clear, accessible choice.\n\nThe full spec lives in `ob-ax`; the references below carry helper-specific\nrules and are useful when `ob-ax` is not installed.\n\nThese are the current supported Oblique helper references. Use\n`references/migration.md` for historical version changes instead of selecting\nan older helper reference.\n\n## References\n\nRead the relevant reference before using an Oblique helper or service.\n\n- [authentication](references/authentication.md): authentication setup and behavior\n- [banner](references/banner.md): environment banner configuration\n- [collapse](references/collapse.md): collapsible content\n- [date](references/date.md): date parsing, formatting, and locale behavior\n- [document meta](references/document-meta.md): document title and metadata\n- [error messages](references/error-messages.md): translated validation errors\n- [focus invalid](references/focus-invalid.md): focus management for invalid forms\n- [focus with outline](references/focus-with-outline.md): visible focus styling\n- [global events](references/global-events.md): application-wide events\n- [HTTP interceptor](references/http-interceptor.md): API loading and error behavior\n- [localize](references/localize.md): localization helpers\n- [nested form](references/nested-form.md): nested Angular forms\n- [notification](references/notification.md): user notifications\n- [number format](references/number-format.md): number formatting\n- [off-canvas](references/off-canvas.md): off-canvas panels\n- [Oblique configuration](references/provide-oblique-configuration.md): global configuration\n- [RxJS operators](references/rxjs-operators.md): Oblique RxJS helpers\n- [schema validation](references/schema-validation.md): schema validation\n- [selectable](references/selectable.md): selectable content\n- [translate params](references/translate-params.md): translation parameters\n- [translations](references/translations.md): translation setup and runtime behavior\n- [unknown route](references/unknown-route.md): unknown-route handling\n- [unsaved changes](references/unsaved-changes.md): dirty-form navigation guards\n- [version](references/version.md): Oblique version information\n\n## Migration\n\nWhen migrating between Oblique versions, read\n[15-to-16 migration](references/migrations/15-to-16.md) for helper changes\nbetween those releases."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Reads the translations, localize, and date helper references before implementing the behavior."
+			}
+		]
+	},
+	{
+		"description": "ob-helpers #2",
+		"vars": {
+			"prompt": "Prevent navigation away from a dirty form and explain how the confirmation should work.",
+			"skill_name": "ob-helpers",
+			"eval_id": "2",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Helpers\n\nDocs for Oblique helpers and services, distilled from the Oblique\ndocumentation. Each reference carries the helper's purpose, usage rules,\nhow to use it, and accessibility rules where the docs provide them. When an\nOblique MCP server is available, its information overrules these references on\nAPI specifics only, never on semantics.\n\n## Cross-cutting accessibility MUSTs\n\n- Every interactive element MUST have an accessible name.\n- Form errors MUST be associated with their inputs through\n  `aria-describedby` and `aria-invalid`.\n- Focus indicators MUST remain visible.\n- Status changes MUST be announced without moving focus.\n- Navigation away from dirty forms MUST give users a clear, accessible choice.\n\nThe full spec lives in `ob-ax`; the references below carry helper-specific\nrules and are useful when `ob-ax` is not installed.\n\nThese are the current supported Oblique helper references. Use\n`references/migration.md` for historical version changes instead of selecting\nan older helper reference.\n\n## References\n\nRead the relevant reference before using an Oblique helper or service.\n\n- [authentication](references/authentication.md): authentication setup and behavior\n- [banner](references/banner.md): environment banner configuration\n- [collapse](references/collapse.md): collapsible content\n- [date](references/date.md): date parsing, formatting, and locale behavior\n- [document meta](references/document-meta.md): document title and metadata\n- [error messages](references/error-messages.md): translated validation errors\n- [focus invalid](references/focus-invalid.md): focus management for invalid forms\n- [focus with outline](references/focus-with-outline.md): visible focus styling\n- [global events](references/global-events.md): application-wide events\n- [HTTP interceptor](references/http-interceptor.md): API loading and error behavior\n- [localize](references/localize.md): localization helpers\n- [nested form](references/nested-form.md): nested Angular forms\n- [notification](references/notification.md): user notifications\n- [number format](references/number-format.md): number formatting\n- [off-canvas](references/off-canvas.md): off-canvas panels\n- [Oblique configuration](references/provide-oblique-configuration.md): global configuration\n- [RxJS operators](references/rxjs-operators.md): Oblique RxJS helpers\n- [schema validation](references/schema-validation.md): schema validation\n- [selectable](references/selectable.md): selectable content\n- [translate params](references/translate-params.md): translation parameters\n- [translations](references/translations.md): translation setup and runtime behavior\n- [unknown route](references/unknown-route.md): unknown-route handling\n- [unsaved changes](references/unsaved-changes.md): dirty-form navigation guards\n- [version](references/version.md): Oblique version information\n\n## Migration\n\nWhen migrating between Oblique versions, read\n[15-to-16 migration](references/migrations/15-to-16.md) for helper changes\nbetween those releases."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Reads the unsaved-changes reference and includes the accessibility implications."
+			}
+		]
+	},
+	{
+		"description": "ob-helpers #3",
+		"vars": {
+			"prompt": "Create a reusable Angular button component with a tooltip and loading state.",
+			"skill_name": "ob-helpers",
+			"eval_id": "3",
+			"case_type": "trigger"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Does not treat the task as primarily a helper or service task; routes component guidance instead."
+			}
+		]
+	},
+	{
+		"description": "ob-toolchain #1",
+		"vars": {
+			"prompt": "Create a new internal Angular project called permits-portal with Oblique and leave it ready for development.",
+			"skill_name": "ob-toolchain",
+			"eval_id": "1",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Toolchain\n\nUse this skill for Oblique CLI, installation, schematics, and upgrades. When\nan Oblique MCP server is available, its information overrules these references\non API specifics only, never on lifecycle semantics.\n\n## References\n\n- Read [ng-add](references/ng-add.md) when adding the Toolchain to an existing\n  Angular project.\n- Read [add-oblique](references/add-oblique.md) when embedding the Oblique\n  master layout into a fresh Angular project.\n- Read [i18n](references/i18n.md) when configuring locales and translations.\n- Read [linting](references/linting.md) when setting up Oblique ESLint rules.\n- Read [logger](references/logger.md) when using Toolchain structured logging.\n- Read [exec](references/exec.md) when executing commands through Toolchain or\n  migrating from Toolchain 15 to 16.\n- Read [getting started](references/getting-started.md) when creating a new\n  project or adding Oblique to a project.\n- Read [how to update Oblique](references/how-to-update-oblique.md) when\n  upgrading between Oblique major versions or handling an unsupported layout.\n\n## Create a project\n\nBefore running the CLI:\n\n- Confirm Node.js is version 24.18.0 or newer.\n- Confirm the target is an Angular application that can use Oblique\n  schematics. Standalone applications and SSR are not supported by the\n  schematics.\n- Decide whether the project is internal or external. Internal projects use\n  the Confederation npm registry configuration; external projects do not.\n\nCreate a new project with:\n\n```shell\nnpx @oblique/cli@latest new <project-name>\n```\n\nUse `--npmrc` for an internal project or `--no-npmrc` for an external project.\nThe command is interactive. Keep its prompts visible and answer them one at a\ntime. After it completes, inspect the generated configuration and set the\napplication's accessibility statement information in\n`provideObliqueConfiguration` as required by the project.\n\nValidate the new project with its normal start, lint, and test commands. A\nproject is ready when dependencies install, the application starts, linting\npasses, and tests pass.\n\n## Update an existing project\n\n1. Check the current Angular and Oblique major versions, the project layout,\n   and the working tree. Preserve unrelated user changes.\n2. Check the Oblique lifecycle and changelog. Updates must move through each\n   major version between the current version and the target.\n3. For Oblique 12.1 and newer, run the next major update:\n\n   ```shell\n   npx @oblique/cli@<oblique-version> update\n   ```\n\n   The command supports `--force`, `--verbose`, and `--allow-dirty`. Prefer a\n   clean working tree so the schematic diff is reviewable.\n4. Review every schematic change. Check the changelog for manual adjustments,\n   then run the project's lint and test commands and verify the application\n   still works.\n5. Repeat one major version at a time until the target is installed. Keep the\n   migration diff separate from unrelated changes.\n\nFor Oblique 12.0 and older, update Angular and its matching CLI, Jest builder,\nand ESLint schematics one major at a time, then update Angular Material, then\nOblique. Use the Angular CLI update commands documented by the project's\nversion-specific migration guidance. Finish each major step with a reviewed\ndiff, lint run, and test run.\n\n## Unsupported schematic layouts\n\nWhen the application is standalone, uses SSR, or is not located under `src`,\nmanual installation or migration is required. Inspect the installed package's\nmigration guidance and the application's Angular configuration before editing.\nDo not force schematics into an unsupported layout.\n\n## Handoff\n\nUse `ob-components` for component usage, `ob-helpers` for application helpers,\nand `ob-ax` for accessibility review. Use this skill for the project lifecycle\nthat gets those capabilities installed and updated."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Checks the Node prerequisite, uses the Oblique CLI with internal npm registry configuration, keeps prompts visible, and verifies install, start, lint, and tests."
+			}
+		]
+	},
+	{
+		"description": "ob-toolchain #2",
+		"vars": {
+			"prompt": "Our existing Angular app is on Oblique 15 and needs to move to Oblique 16. The working tree has unrelated edits.",
+			"skill_name": "ob-toolchain",
+			"eval_id": "2",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Toolchain\n\nUse this skill for Oblique CLI, installation, schematics, and upgrades. When\nan Oblique MCP server is available, its information overrules these references\non API specifics only, never on lifecycle semantics.\n\n## References\n\n- Read [ng-add](references/ng-add.md) when adding the Toolchain to an existing\n  Angular project.\n- Read [add-oblique](references/add-oblique.md) when embedding the Oblique\n  master layout into a fresh Angular project.\n- Read [i18n](references/i18n.md) when configuring locales and translations.\n- Read [linting](references/linting.md) when setting up Oblique ESLint rules.\n- Read [logger](references/logger.md) when using Toolchain structured logging.\n- Read [exec](references/exec.md) when executing commands through Toolchain or\n  migrating from Toolchain 15 to 16.\n- Read [getting started](references/getting-started.md) when creating a new\n  project or adding Oblique to a project.\n- Read [how to update Oblique](references/how-to-update-oblique.md) when\n  upgrading between Oblique major versions or handling an unsupported layout.\n\n## Create a project\n\nBefore running the CLI:\n\n- Confirm Node.js is version 24.18.0 or newer.\n- Confirm the target is an Angular application that can use Oblique\n  schematics. Standalone applications and SSR are not supported by the\n  schematics.\n- Decide whether the project is internal or external. Internal projects use\n  the Confederation npm registry configuration; external projects do not.\n\nCreate a new project with:\n\n```shell\nnpx @oblique/cli@latest new <project-name>\n```\n\nUse `--npmrc` for an internal project or `--no-npmrc` for an external project.\nThe command is interactive. Keep its prompts visible and answer them one at a\ntime. After it completes, inspect the generated configuration and set the\napplication's accessibility statement information in\n`provideObliqueConfiguration` as required by the project.\n\nValidate the new project with its normal start, lint, and test commands. A\nproject is ready when dependencies install, the application starts, linting\npasses, and tests pass.\n\n## Update an existing project\n\n1. Check the current Angular and Oblique major versions, the project layout,\n   and the working tree. Preserve unrelated user changes.\n2. Check the Oblique lifecycle and changelog. Updates must move through each\n   major version between the current version and the target.\n3. For Oblique 12.1 and newer, run the next major update:\n\n   ```shell\n   npx @oblique/cli@<oblique-version> update\n   ```\n\n   The command supports `--force`, `--verbose`, and `--allow-dirty`. Prefer a\n   clean working tree so the schematic diff is reviewable.\n4. Review every schematic change. Check the changelog for manual adjustments,\n   then run the project's lint and test commands and verify the application\n   still works.\n5. Repeat one major version at a time until the target is installed. Keep the\n   migration diff separate from unrelated changes.\n\nFor Oblique 12.0 and older, update Angular and its matching CLI, Jest builder,\nand ESLint schematics one major at a time, then update Angular Material, then\nOblique. Use the Angular CLI update commands documented by the project's\nversion-specific migration guidance. Finish each major step with a reviewed\ndiff, lint run, and test run.\n\n## Unsupported schematic layouts\n\nWhen the application is standalone, uses SSR, or is not located under `src`,\nmanual installation or migration is required. Inspect the installed package's\nmigration guidance and the application's Angular configuration before editing.\nDo not force schematics into an unsupported layout.\n\n## Handoff\n\nUse `ob-components` for component usage, `ob-helpers` for application helpers,\nand `ob-ax` for accessibility review. Use this skill for the project lifecycle\nthat gets those capabilities installed and updated."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Preserves unrelated changes, updates one major at a time, uses the versioned Oblique CLI update, reviews schematic and changelog changes, and runs lint/tests."
+			}
+		]
+	},
+	{
+		"description": "ob-toolchain #3",
+		"vars": {
+			"prompt": "Add an Oblique dialog to an already configured Angular application and make its close button accessible.",
+			"skill_name": "ob-toolchain",
+			"eval_id": "3",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Toolchain\n\nUse this skill for Oblique CLI, installation, schematics, and upgrades. When\nan Oblique MCP server is available, its information overrules these references\non API specifics only, never on lifecycle semantics.\n\n## References\n\n- Read [ng-add](references/ng-add.md) when adding the Toolchain to an existing\n  Angular project.\n- Read [add-oblique](references/add-oblique.md) when embedding the Oblique\n  master layout into a fresh Angular project.\n- Read [i18n](references/i18n.md) when configuring locales and translations.\n- Read [linting](references/linting.md) when setting up Oblique ESLint rules.\n- Read [logger](references/logger.md) when using Toolchain structured logging.\n- Read [exec](references/exec.md) when executing commands through Toolchain or\n  migrating from Toolchain 15 to 16.\n- Read [getting started](references/getting-started.md) when creating a new\n  project or adding Oblique to a project.\n- Read [how to update Oblique](references/how-to-update-oblique.md) when\n  upgrading between Oblique major versions or handling an unsupported layout.\n\n## Create a project\n\nBefore running the CLI:\n\n- Confirm Node.js is version 24.18.0 or newer.\n- Confirm the target is an Angular application that can use Oblique\n  schematics. Standalone applications and SSR are not supported by the\n  schematics.\n- Decide whether the project is internal or external. Internal projects use\n  the Confederation npm registry configuration; external projects do not.\n\nCreate a new project with:\n\n```shell\nnpx @oblique/cli@latest new <project-name>\n```\n\nUse `--npmrc` for an internal project or `--no-npmrc` for an external project.\nThe command is interactive. Keep its prompts visible and answer them one at a\ntime. After it completes, inspect the generated configuration and set the\napplication's accessibility statement information in\n`provideObliqueConfiguration` as required by the project.\n\nValidate the new project with its normal start, lint, and test commands. A\nproject is ready when dependencies install, the application starts, linting\npasses, and tests pass.\n\n## Update an existing project\n\n1. Check the current Angular and Oblique major versions, the project layout,\n   and the working tree. Preserve unrelated user changes.\n2. Check the Oblique lifecycle and changelog. Updates must move through each\n   major version between the current version and the target.\n3. For Oblique 12.1 and newer, run the next major update:\n\n   ```shell\n   npx @oblique/cli@<oblique-version> update\n   ```\n\n   The command supports `--force`, `--verbose`, and `--allow-dirty`. Prefer a\n   clean working tree so the schematic diff is reviewable.\n4. Review every schematic change. Check the changelog for manual adjustments,\n   then run the project's lint and test commands and verify the application\n   still works.\n5. Repeat one major version at a time until the target is installed. Keep the\n   migration diff separate from unrelated changes.\n\nFor Oblique 12.0 and older, update Angular and its matching CLI, Jest builder,\nand ESLint schematics one major at a time, then update Angular Material, then\nOblique. Use the Angular CLI update commands documented by the project's\nversion-specific migration guidance. Finish each major step with a reviewed\ndiff, lint run, and test run.\n\n## Unsupported schematic layouts\n\nWhen the application is standalone, uses SSR, or is not located under `src`,\nmanual installation or migration is required. Inspect the installed package's\nmigration guidance and the application's Angular configuration before editing.\nDo not force schematics into an unsupported layout.\n\n## Handoff\n\nUse `ob-components` for component usage, `ob-helpers` for application helpers,\nand `ob-ax` for accessibility review. Use this skill for the project lifecycle\nthat gets those capabilities installed and updated."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Routes component and accessibility implementation to ob-components and ob-ax instead of treating it as a project lifecycle task."
+			}
+		]
+	},
+	{
+		"description": "oblique #1",
+		"vars": {
+			"prompt": "I need to build a settings page in Angular with a form, a two-column layout, and a warning before users leave with unsaved changes.",
+			"skill_name": "oblique",
+			"eval_id": "1",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-components, ob-helpers, and ob-ax, then directs the agent to the relevant layout, form, unsaved-changes, and accessibility references."
+			}
+		]
+	},
+	{
+		"description": "oblique #2",
+		"vars": {
+			"prompt": "Which Oblique guidance should I use for a searchable table with filters and keyboard support?",
+			"skill_name": "oblique",
+			"eval_id": "2",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-components for table and form controls and ob-ax for keyboard accessibility."
+			}
+		]
+	},
+	{
+		"description": "oblique #3",
+		"vars": {
+			"prompt": "Write a pure TypeScript date utility that does not use Angular or Oblique.",
+			"skill_name": "oblique",
+			"eval_id": "3",
+			"case_type": "trigger"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Does not route the task to Oblique skills."
+			}
+		]
+	},
+	{
+		"description": "oblique #4",
+		"vars": {
+			"prompt": "Start a new internal Angular app called permits-portal with Oblique, including the right npm registry setup and generated master layout.",
+			"skill_name": "oblique",
+			"eval_id": "4",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-toolchain and directs the agent to the new-project, npmrc, add-oblique, and verification guidance."
+			}
+		]
+	},
+	{
+		"description": "oblique #5",
+		"vars": {
+			"prompt": "Our Angular app is on Oblique 15. Help me upgrade it to 16, then check the generated changes and make sure the app still passes lint and tests.",
+			"skill_name": "oblique",
+			"eval_id": "5",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-toolchain for the incremental update and verification workflow, with ob-components or ob-helpers only if the migration changes their APIs."
+			}
+		]
+	},
+	{
+		"description": "oblique #6",
+		"vars": {
+			"prompt": "I need a language switcher that updates the URL, registers Swiss locales, and keeps date formatting consistent.",
+			"skill_name": "oblique",
+			"eval_id": "6",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-helpers for translations, localization, and date behavior; adds ob-ax when accessibility of the language control is in scope."
+			}
+		]
+	},
+	{
+		"description": "oblique #7",
+		"vars": {
+			"prompt": "Create a new Oblique project with a form that validates accessibly and warns about unsaved changes before navigation.",
+			"skill_name": "oblique",
+			"eval_id": "7",
+			"case_type": "behavior",
+			"skill_content": "# Oblique Docs Router\n\nSelects the right Oblique skill for a task. The category skills fire on\ntheir own when a prompt names their area; this router covers outcome-style\nprompts and tasks that span several areas. When an Oblique MCP server is\navailable, its information overrules the skills' references on API\nspecifics only, never on semantics.\n\n## Skills\n\n- **ob-components**: Oblique UI components (alert, autocomplete, badge,\n  breadcrumb, button, card, chips, column layout, dialog, expansion panel,\n  external link, file upload, form, html table, list group, master layout,\n  material table, nav tree, paginator, popover, progress bar, slide toggle,\n  slider, spinner, stepper, tabs, tooltip). Use when building or styling\n  UI with these.\n- **ob-helpers**: Oblique helpers and services (authentication, banner,\n  collapse, date, document meta, error messages, focus handling, global\n  events, http interceptor, language, localize, nested forms, notification,\n  number format, off-canvas, rxjs operators, schema validation, selectable,\n  translations, unsaved changes, version). Use when wiring app behaviour\n  around Oblique services.\n- **ob-toolchain**: Oblique CLI and project lifecycle (new projects,\n  installation, schematics, updates, and migrations). Use when setting up or\n  upgrading an Oblique project.\n- **ob-ax**: accessibility spec for Oblique apps. Use when a11y, WCAG,\n  keyboard access, focus, or screen readers are in scope.\n\n## Intent mapping\n\n| Prompt intent | Skills |\n|---|---|\n| Build or restyle a UI element | ob-components |\n| Wire app behaviour (auth, errors, translations, events) | ob-helpers |\n| Project creation or update | ob-toolchain |\n| Make something accessible, review a11y | ob-ax |\n| Build a form | ob-components (form, inputs) + ob-ax |\n| Build a settings or detail page | ob-components (master/column layout) + ob-helpers (unsaved changes) + ob-ax |\n| Migrate between Oblique versions | ob-components + ob-helpers (migration references) |\n\n## Multi-skill tasks\n\nWhen a task maps to several skills, read each skill's relevant references\nbefore writing code. A form task needs the form reference plus the a11y\nrules; a page task needs the layout reference plus the unsaved-changes\nhelper. Do not guess component APIs from memory when a reference exists."
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Selects ob-toolchain for project creation, ob-components for the form, ob-helpers for unsaved changes, and ob-ax for accessibility."
+			}
+		]
+	},
+	{
+		"description": "oblique #8",
+		"vars": {
+			"prompt": "Update a plain Angular application that intentionally does not use Oblique or any Oblique packages.",
+			"skill_name": "oblique",
+			"eval_id": "8",
+			"case_type": "trigger"
+		},
+		"assert": [
+			{
+				"type": "llm-rubric",
+				"value": "Does not route the task to Oblique skills unless the user decides to adopt Oblique as part of the update."
+			}
+		]
+	}
+]
