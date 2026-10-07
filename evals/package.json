@@ -6,7 +6,6 @@
   "license": "Proprietary",
   "type": "commonjs",
   "scripts": {
-    "build": "node build-tests.js",
     "eval": "promptfoo eval -c promptfooconfig.yaml --no-cache --env-file ~/.agent-credentials/env",
     "eval:toolchain": "promptfoo eval -c promptfooconfig.yaml --no-cache --env-file ~/.agent-credentials/env --filter-pattern \"ob-toolchain #\"",
     "eval:oblique": "promptfoo eval -c promptfooconfig.yaml --no-cache --env-file ~/.agent-credentials/env --filter-pattern \"oblique #\"",

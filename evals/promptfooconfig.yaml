@@ -2,8 +2,9 @@
 #
 # The provider is evals/bit-provider.js, a custom provider for the BIT AI
 # model gateway. The API key comes from BIT_LLM_API_KEY (sourced from
-# ~/.agent-credentials/env). Test cases are generated from the per-skill
-# evals.json files by evals/build-tests.js.
+# ~/.agent-credentials/env). Test cases are loaded at run time from the
+# per-skill evals.json files by evals/generate-tests.js; there is no build
+# step and no generated artifact.
 #
 # The evals target the skills, not the models: one model (GLM) runs every
 # case twice, once with the skill body injected into the prompt and once
@@ -44,4 +45,4 @@ defaultTest:
       config:
         model: glm-5-3-flash-r
 
-tests: file://generated-tests.json
+tests: file://generate-tests.js

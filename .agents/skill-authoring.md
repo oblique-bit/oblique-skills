@@ -132,11 +132,12 @@ The setup lives in `evals/`:
   `config.inject_skill` decides whether the skill body is prepended to the
   prompt. The API key comes from `BIT_LLM_API_KEY` (sourced from
   `~/.agent-credentials/env`).
-- `evals/build-tests.js`: generates `evals/generated-tests.json` from the
-  per-skill `evals.json` files. Each case becomes one test with an
-  `llm-rubric` assertion built from `expected_output`. Behavior cases get
-  `vars.skill_content`; near-miss cases stay bare. Rerun it after adding
-  eval cases.
+- `evals/generate-tests.js`: promptfoo test generator, referenced from the
+  config as `tests: file://generate-tests.js`. It loads the per-skill
+  `evals.json` files at run time, so new or changed eval cases need no build
+  step. Each case becomes one test with an `llm-rubric` assertion built from
+  `expected_output`. Behavior cases get `vars.skill_content`; near-miss
+  cases stay bare.
 - `evals/promptfooconfig.yaml`: the two providers (`glm-with-skill`,
   `glm-baseline`), the grader override, and the test file reference.
 - `evals/aggregate-results.js`: reads the promptfoo sqlite database and
@@ -151,9 +152,9 @@ npm run results
 ```
 
 The scripts pass `--env-file ~/.agent-credentials/env`, so no manual env
-sourcing is needed. `npm run build` regenerates the test file after eval
-cases change; `npm run eval:oblique` and `npm run eval:toolchain` rerun one
-skill's cases; `npm run view` opens the web UI.
+sourcing is needed. `npm run eval:oblique` and `npm run eval:toolchain`
+rerun one skill's cases; `npm run view` opens the web UI. Eval cases are
+picked up on the next run; there is no build step.
 
 Gotchas learned on this machine:
 

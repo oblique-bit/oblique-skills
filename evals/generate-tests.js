@@ -1,21 +1,21 @@
-// Builds promptfoo test cases from the per-skill evals.json files.
+// promptfoo test generator: loads the per-skill evals.json files at run time.
 //
-// Each eval case becomes one promptfoo test with vars.prompt and a
-// llm-rubric assertion derived from expected_output. The generator reads the
-// five skills/*/evals/evals.json files at run time, so new eval cases need no
-// changes here.
+// Referenced from promptfooconfig.yaml as `tests: file://generate-tests.js`.
+// promptfoo calls the exported function on every eval, so new or changed eval
+// cases need no build step and no generated artifact.
 //
-// Usage: node evals/build-tests.js > evals/generated-tests.json
+// Each eval case becomes one promptfoo test with vars.prompt and an
+// llm-rubric assertion derived from expected_output. Behavior cases get the
+// skill body injected into the prompt, so the eval measures the skill's
+// guidance rather than the bare model. Near-miss cases (expected_output
+// starts with "Does not") stay bare: they test that the model does not route
+// the task to Oblique skills.
 
 const fs = require('node:fs');
 const path = require('node:path');
 
 const skillsDir = path.join(__dirname, '..', 'skills');
 
-// Behavior cases get the skill body injected into the prompt, so the eval
-// measures the skill's guidance rather than the bare model. Near-miss cases
-// (expected_output starts with "Does not") stay bare: they test that the
-// model does not route the task to Oblique skills.
 function loadSkillBody(skill) {
 	const skillPath = path.join(skillsDir, skill, 'SKILL.md');
 	if (!fs.existsSync(skillPath)) {
@@ -27,7 +27,7 @@ function loadSkillBody(skill) {
 		.trim();
 }
 
-function loadEvals() {
+module.exports = async function () {
 	const tests = [];
 	for (const skill of fs.readdirSync(skillsDir)) {
 		const evalsPath = path.join(skillsDir, skill, 'evals', 'evals.json');
@@ -60,8 +60,4 @@ function loadEvals() {
 		}
 	}
 	return tests;
-}
-
-const tests = loadEvals();
-fs.writeFileSync(path.join(__dirname, 'generated-tests.json'), JSON.stringify(tests, null, '\t'));
-console.log(`Wrote ${tests.length} test cases to evals/generated-tests.json`);
+};
