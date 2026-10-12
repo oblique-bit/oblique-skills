@@ -19,7 +19,9 @@ only, never on semantics.
 
 - Every interactive element MUST have an accessible name.
 - Icon-only buttons MUST have an accessible label; a tooltip is preferred.
-- Overlays MUST close on Escape and MUST NOT trap focus.
+- Overlays MUST close on Escape and MUST NOT trap keyboard focus without a way
+  out. Modal dialogs MUST keep Tab and Shift+Tab inside the dialog while it is
+  open and MUST return focus to the trigger on close.
 - Information MUST NOT be conveyed by color alone.
 - Only one primary button per page or dialog.
 

@@ -20,8 +20,8 @@ only, never on semantics.
 Accessibility guidance is layered. This spec is the top layer:
 
 1. Component references in `ob-components` and `ob-helpers` carry the
-   component-specific a11y rules (their Accessibility section). Read those
-   first when a specific component is in hand.
+   component-specific a11y rules where the documentation has them. Read the
+   reference first when a specific component is in hand.
 2. The cross-cutting MUSTs below apply to every change.
 3. This spec adds the full picture: Angular anti-patterns and Oblique
    helpers.

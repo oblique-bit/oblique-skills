@@ -30,6 +30,14 @@ The template can be rendered either right after its toggle or at the end of the 
 
 Accessibility is ensured through the `aria-describedby` attribute and the `tooltip` role. The positioning is achieved with the popper library, for more information see [popper.js.org](https://popper.js.org/).
 
+## Accessibility
+
+- The popover content is associated with its toggle through
+  `aria-describedby` and carries the `tooltip` role.
+- Adding the template after the toggle element preserves the tabindex order;
+  adding it at the end of the body breaks it. Prefer `appendToBody: false`
+  unless a `z-index` problem forces the other option.
+
 ### Directives
 
 #### ObPopoverDirective

@@ -27,7 +27,8 @@ The API definition is available on the Angular Material site: [Table - opens in 
 
 ## Accessibility
 
-When using global button within the part of a table, make sure that they are in a rather than in a .
+When using global buttons within a table, make sure that they are in a `<th>`
+rather than in a `<td>`.
 
 ## CSS classes
 

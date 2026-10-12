@@ -44,10 +44,6 @@ In radio mode, the selection behaves like radio buttons.
 
 In Windows mode, the selection behaves like the Windows's file explorer.
 
-**Accessibility**
-
-In Windows mode, the accessibility of the feature is not guaranteed. The behavior is not a web standard, which means there are no out-of-the-box roles for it. The accessibility has been done as well as possible but is still limited.
-
 - multiple elements can be selected at the same time
 
 - the selection cannot be emptied
@@ -69,6 +65,16 @@ In Windows mode, the accessibility of the feature is not guaranteed. The behavio
 - individual elements can be toggled with a mouse click
 
 - the focused element can be toggled with the space key
+
+## Accessibility
+
+- Checkbox and radio modes follow web-standard keyboard behavior: Tab moves
+  the focus between elements, Space toggles the focused element, and radio
+  mode uses the arrow keys in a circular manner.
+- Windows mode does not follow a web standard, so there are no out-of-the-box
+  roles for it. The accessibility of this mode has been done as well as
+  possible but is still limited. Prefer checkbox or radio mode when screen
+  reader support matters.
 
 ### Directives
 
