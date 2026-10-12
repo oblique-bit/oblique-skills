@@ -292,3 +292,18 @@
  - ISO date with time, for example `2026-09-25T12:18`
 
  - Time, for example `12:18`
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-date-component?file=package.json) repository (MIT):
+
+```html
+<ob-date date="2025-05-12" format="longDate" />
+<ob-date date="2025-05-12" format="shortDate" />
+```
+
+```ts
+export class HomeComponent {
+  exampleDate = new Date('2025-05-12');
+}
+```

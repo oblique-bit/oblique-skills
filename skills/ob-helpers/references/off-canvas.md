@@ -47,3 +47,21 @@ Description
 
 `toggle(): voidy`
 Toggles the off-canvas.
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-off-canvas?file=package.json) repository (MIT):
+
+```html
+<ob-master-layout>
+  <ng-container obHeaderTitle>My application</ng-container>
+
+  <ng-container obOffCanvasTitle>Off-Canvas title</ng-container>
+  <ng-container obOffCanvasContent>Off-Canvas content</ng-container>
+</ob-master-layout>
+```
+
+```html
+<!-- The toggle is provided by the project -->
+<button obButton obOffCanvasToggle>Open off-canvas</button>
+```

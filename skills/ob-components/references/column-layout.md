@@ -113,3 +113,24 @@ Screen-reader only label for the right toggle button.
 
 - /components/expansion-panel
 - /components/off-canvas
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-column-layout?file=package.json) repository (MIT):
+
+```ts
+import {ObColumnLayoutModule} from '@oblique/oblique';
+
+@NgModule({
+  imports: [ObColumnLayoutModule],
+})
+export class AppModule {}
+```
+
+```html
+<ob-column-layout>
+  <ng-container column-left-content>Left panel</ng-container>
+  <ng-container column-main-content>Main content</ng-container>
+  <ng-container column-right-content>Right panel</ng-container>
+</ob-column-layout>
+```

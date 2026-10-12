@@ -68,6 +68,19 @@ Back to home
 Retourner &agrave; la page d'accueil
 Tornare a casa
 
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-oblique-unknown-route-example?file=package.json) repository (MIT):
+
+```ts
+import {ObUnknownRouteModule} from '@oblique/oblique';
+
+const routes: Routes = [
+  // ...existing routes...
+  {path: '**', redirectTo: 'unknown-route'},
+];
+```
+
 ### Components
 
 #### ObUnknownRouteComponent

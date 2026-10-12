@@ -126,3 +126,29 @@ Return value
 
 `boolean`
 flag indicating success / failure
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-unsaved-changes?file=package.json) repository (MIT):
+
+```ts
+import {ObUnsavedChangesModule} from '@oblique/oblique';
+
+@NgModule({
+  imports: [ObUnsavedChangesModule],
+})
+export class AppModule {}
+```
+
+```html
+<form id="my-form" [formGroup]="form" obUnsavedChanges>
+  <!-- form fields -->
+</form>
+```
+
+```ts
+// Protect routes with the guard
+const routes: Routes = [
+  {path: 'edit', component: EditComponent, canDeactivate: [ObUnsavedChangesGuard]},
+];
+```

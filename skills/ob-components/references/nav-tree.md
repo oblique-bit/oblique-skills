@@ -117,3 +117,30 @@ Reference to the parent `ObNavTreeItemModel`, if any.
 
 routes: any[]
 List of all routes from the root element to this element.
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-nav-tree-default?file=package.json) repository (MIT):
+
+```ts
+import {ObNavTreeModule} from '@oblique/oblique';
+
+export class HomeComponent implements OnInit {
+  public items: ObNavTreeItemModel[] = [];
+
+  ngOnInit(): void {
+    this.items = [{
+      id: 'tree-item-1',
+      label: 'Tree item 1',
+      items: [
+        {id: 'tree-item-1-1', label: 'Child 1', path: 'child-1'},
+        {id: 'tree-item-1-2', label: 'Disabled child', disabled: true},
+      ],
+    }];
+  }
+}
+```
+
+```html
+<ob-nav-tree [items]="items" />
+```

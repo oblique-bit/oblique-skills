@@ -83,3 +83,21 @@ If there's no breadcrumb label defined for a route, the url will be used as labe
 ## Related
 
 - /components/master-layout
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-breadcrumb?file=package.json) repository (MIT):
+
+```html
+<ob-breadcrumb />
+<ob-breadcrumb maxWidth="5ch" />
+```
+
+```ts
+// Labels come from the route data; dynamic routes are supported.
+const routes: Routes = [
+  {path: 'user', data: {breadcrumb: 'User'}, children: [
+    {path: ':id', data: {breadcrumb: 'Details'}},
+  ]},
+];
+```

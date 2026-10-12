@@ -91,3 +91,20 @@ Description
 `EXTERNAL_LINK: ObIExternalLink`
 
 The default configuration for external links
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-external-link?file=package.json) repository (MIT). Importing the module is enough; the directive applies itself to every external `a` element:
+
+```ts
+import {ObExternalLinkModule} from '@oblique/oblique';
+
+@NgModule({
+  imports: [ObExternalLinkModule],
+})
+export class AppModule {}
+```
+
+```html
+<a href="https://www.bit.admin.ch/en/foitt">FOITT Homepage</a>
+```

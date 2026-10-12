@@ -222,3 +222,29 @@ When the active locale changes, Oblique automatically updates:
 - Hidden if only a single locale exists
 
 - Switches the active language without page reload
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-translations?file=package.json) repository (MIT):
+
+```ts
+import {provideObliqueConfiguration} from '@oblique/oblique';
+
+providers: [
+  provideObliqueConfiguration({
+    translate: {
+      locales: {
+        locales: ['de-CH', 'en-CH', 'es', 'fr-CH', 'it-CH'],
+        disabled: false,
+        defaultLanguage: 'de',
+      },
+    },
+  }),
+  {provide: LOCALE_ID, useValue: 'de-CH'},
+],
+```
+
+```html
+{{ 'i18n.common.action' | translate }}
+{{ 'i18n.oblique.service-navigation.applications.image.online.alt' | translate: {name: 'test'} }}
+```
