@@ -144,9 +144,10 @@ the rules above:
   reference file is announced in its skill's `SKILL.md` with what it
   contains and when to load it.
 - Component and helper references follow a fixed section order: Import,
-  Purpose, Usage rules, How to use, Accessibility, Migration, Related.
-  Sections with no content are omitted, never emitted empty. TextPage
-  references are free-form prose with no fixed template.
+  Purpose, Usage rules, How to use, Accessibility, Migration, Related,
+  Example. Sections with no content are omitted, never emitted empty.
+  Example, when present, is the closing section: it never interrupts the
+  API docs. TextPage references are free-form prose with no fixed template.
 - Current-version pages remain directly under `references/`. Each category
   skill carries a versioned migration guide at
   `references/migrations/<from>-to-<to>.md`, assembled from the `deprecation`
