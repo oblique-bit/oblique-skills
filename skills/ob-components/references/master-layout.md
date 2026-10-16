@@ -553,37 +553,6 @@ Indicates if the a11y icon should be hidden in the main navigation.
 `OB_PAMS_CONFIGURATION: ObIPamsConfiguration`
 Provides the mandatory PAMS environment as well as an optional root url.
 
-## Example
-
-A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-master-layout?file=package.json) repository (MIT):
-
-```html
-<ob-master-layout [navigation]="topNavigation">
-  <ng-container obHeaderTitle>My application</ng-container>
-
-  <ng-template #obFooterLink>
-    <a href="https://www.bit.admin.ch/en/foitt">FOITT Homepage</a>
-  </ng-template>
-
-  <ng-container obFooterInfo>
-    <p>&copy; 2024 FOITT</p>
-  </ng-container>
-</ob-master-layout>
-```
-
-```ts
-import type {ObINavigationLink} from '@oblique/oblique';
-
-export class AppComponent {
-  topNavigation: ObINavigationLink[] = [
-    {url: 'home', label: 'Home'},
-    {label: 'With sub nav', url: 'menu', children: [
-      {label: 'Sub page', url: 'sub1'},
-    ]},
-  ];
-}
-```
-
 ## Additional info
 
 ## Header variants
@@ -718,3 +687,34 @@ Defines the elements of the navigation item:
 - Label & icon
 
 - Icon only
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-master-layout?file=package.json) repository (MIT):
+
+```html
+<ob-master-layout [navigation]="topNavigation">
+  <ng-container obHeaderTitle>My application</ng-container>
+
+  <ng-template #obFooterLink>
+    <a href="https://www.bit.admin.ch/en/foitt">FOITT Homepage</a>
+  </ng-template>
+
+  <ng-container obFooterInfo>
+    <p>&copy; 2024 FOITT</p>
+  </ng-container>
+</ob-master-layout>
+```
+
+```ts
+import type {ObINavigationLink} from '@oblique/oblique';
+
+export class AppComponent {
+  topNavigation: ObINavigationLink[] = [
+    {url: 'home', label: 'Home'},
+    {label: 'With sub nav', url: 'menu', children: [
+      {label: 'Sub page', url: 'sub1'},
+    ]},
+  ];
+}
+```

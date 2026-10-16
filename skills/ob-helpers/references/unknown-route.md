@@ -68,6 +68,15 @@ Back to home
 Retourner &agrave; la page d'accueil
 Tornare a casa
 
+### Components
+
+#### ObUnknownRouteComponent
+
+The `ObUnknownRouteComponent` can be utilized effectively only if the `TranslationService` is operational and the specific unknown-route keys are loaded, ensuring that it provides language-appropriate messages and navigational functionality.
+
+Selector
+`ob-unknown-route`
+
 ## Example
 
 A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-oblique-unknown-route-example?file=package.json) repository (MIT):
@@ -80,12 +89,3 @@ const routes: Routes = [
   {path: '**', redirectTo: 'unknown-route'},
 ];
 ```
-
-### Components
-
-#### ObUnknownRouteComponent
-
-The `ObUnknownRouteComponent` can be utilized effectively only if the `TranslationService` is operational and the specific unknown-route keys are loaded, ensuring that it provides language-appropriate messages and navigational functionality.
-
-Selector
-`ob-unknown-route`

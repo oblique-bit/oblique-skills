@@ -73,20 +73,6 @@ Description
 `ObTBanner = string | ObIBanner | undefined; `
 Type for the OB_BANNER injection Token
 
-## Example
-
-A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-banner?file=package.json) repository (MIT):
-
-```ts
-import {provideObliqueConfiguration} from '@oblique/oblique';
-
-providers: [
-  provideObliqueConfiguration({
-    banner: {text: 'DEMO'},
-  }),
-],
-```
-
 #### ObIBanner
 
 The default banner configuration
@@ -104,3 +90,17 @@ The default value for the `color` attribute.
 
 `bgColor?: string`
 The default value for the `bgColor` attribute.
+
+## Example
+
+A runnable example lives in the [oblique-stackblitz](https://stackblitz.com/github/oblique-bit/oblique-stackblitz/tree/master/oblique-banner?file=package.json) repository (MIT):
+
+```ts
+import {provideObliqueConfiguration} from '@oblique/oblique';
+
+providers: [
+  provideObliqueConfiguration({
+    banner: {text: 'DEMO'},
+  }),
+],
+```
