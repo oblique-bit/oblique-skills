@@ -26,6 +26,12 @@ This is only a redesign of the Angular Material "Dialog" component.
 
 The API definition is available on the Angular Material site: [Dialog - opens in a new tab](https://v17.material.angular.io/components/dialog/api)
 
+## Additional Info
+
+## Notifications and overlay
+
+By default Oblique displays notifications below any overlays, such as from dialog. To display a notification above the overlay, check the [Notification ](/components/notification) page for more information.
+
 ## Related
 
 - components/alert
