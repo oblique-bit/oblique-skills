@@ -157,6 +157,10 @@ User Expectation
 Sets an expectation of remaining time
 Suggests ongoing activity without specific time information
 
+## Notifications and overlay
+
+By default Oblique displays notifications below any overlays, such as from spinner. To display a notification above the overlay, check the Notification page for more information.
+
 ## Related
 
 - /components/progress-bar
