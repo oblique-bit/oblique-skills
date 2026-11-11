@@ -290,6 +290,28 @@ Defines if similar notifications should be grouped.
 
 ## Additional info
 
+### Notifications and overlay
+
+Oblique always displays notifications behind overlays, this applies to dialogs and spinners. A notification unrelated to a dialog shouldn't be displayed above it. If you need to override this behaviour, two things must be done:
+
+Notifications can be shown above spinner and dialog overlays by increasing the z-index value of the class `.ob-notification-container`. The index must be higher than 1005. Please note that this configuration relies on internal elements and is not guaranteed to work across versions.
+
+Additionally, since Angular 20, OVERLAY_DEFAULT_CONFIG must be overridden for a notification to be displayed above the dialog's overlay:
+
+```
+import {OVERLAY_DEFAULT_CONFIG} from '@angular/cdk/overlay';
+
+providers: [
+  {
+    provide: OVERLAY_DEFAULT_CONFIG,
+    useValue: {
+      usePopover: false
+    }
+  }
+]
+```
+These configs affect the whole application. We advise against changing these behaviours.
+
 ## Alert & Notification
 
 Alerts and Notifications look very similar but are actually very different. Alerts are static elements placed in the document flow. This means they cannot be closed and their content should remain unchanged. Their purpose it to highlight some piece of information.
